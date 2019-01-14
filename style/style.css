@@ -3,6 +3,8 @@ body {
   padding: 0;
   height: 3000px;
   background: #f7f7DF;
+  /* stops scrolling when loading */
+  overflow: hidden;
 }
 
 p {
@@ -19,7 +21,7 @@ p {
 }
 
 .para-box img {
-  max-width: 100%;
+  width: 100%;
 }
 
 .para-box img:not(:first-child) {
@@ -56,7 +58,7 @@ p {
   fill: #FFF;
 }
 
-.info > img {
+.info > a img {
   width: 160px;
   z-index: 9000;
 }
@@ -78,6 +80,9 @@ p {
 
 .scroll-more {
   position: fixed;
+  background-image: url("../images/arrowbottom.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   background-color: #fff;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 15px 0 rgba(0,0,0,0.50);
@@ -272,6 +277,10 @@ p {
   background: #f7f7DF;
 }
 
+.hide-scroll {
+  overflow: hidden !important;
+}
+
 @keyframes drive {
   from {
     transform: translate(-160%, -50%);
@@ -380,7 +389,7 @@ p {
 .loading {
   position: fixed;
   background: #000;
-  opacity: .9;
+  opacity: .95;
   width: 100%;
   height: 100%;
   z-index: 8000;

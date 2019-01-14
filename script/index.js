@@ -5,11 +5,15 @@ const cactus = document.querySelector('.cactus')
 const slideShow = document.querySelector('.slide')
 const slideItems = document.querySelectorAll('.slide .item')
 const icons = document.querySelectorAll('.info svg path')
-const allImages = document.querySelectorAll('img')
+const scrollMore = document.querySelector('.scroll-more')
 
 const para = (function() {
 	let i = 0
 	let animationQueued = false
+
+  window.onbeforeunload = function() {
+    window.scrollTo(0, 0)
+  }
 
 	function optimizeAnimation(first, second) {
     if (animationQueued) {
@@ -30,9 +34,10 @@ const para = (function() {
 	}
 
 	function fadeInNew(slide) {
-		const scollMoreBtn = document.querySelector('.scroll-more').classList.add('fade-away')
+		scrollMore.classList.add('fade-away')
 
 		if (window.scrollY > 800) {
+      document.querySelector('body').classList.add('hide-scroll')
 			const info = document.querySelector('.info')
 			const contact = document.querySelector('.contact')
 			const scooter = document.querySelector('.scooter')
@@ -118,15 +123,6 @@ const para = (function() {
 		}
 	}
 })()
-
-allImages.forEach((img, i) => img.addEventListener('load', function() {
-	if (i === 1) {
-		document.querySelector('.loading').style.opacity = 0
-		setTimeout(function() {
-		document.querySelector('.loading').style.display = 'none'
-		}, 1000);
-	}
-}))
 
 document.addEventListener('scroll', () => para.start(saloon, cactus, slideShow))
 nextBtn.addEventListener('click', () => para.slideShow(slideItems, 'next', icons))
