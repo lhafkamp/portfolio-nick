@@ -8,14 +8,14 @@ const icons = document.querySelectorAll('.info svg path')
 const scrollMore = document.querySelector('.scroll-more')
 
 const para = (function() {
-	let i = 0
-	let animationQueued = false
+  let i = 0
+  let animationQueued = false
 
   window.onbeforeunload = function() {
     window.scrollTo(0, 0)
   }
 
-	function optimizeAnimation(first, second) {
+  function optimizeAnimation(first, second) {
     if (animationQueued) {
       return
     }
@@ -28,102 +28,105 @@ const para = (function() {
     })
   }
 
-	function moveImages(first, second) {
-		first.style.transform = `translate(${window.scrollY * 30 / 100}px)`
-		second.style.transform = `translate(-${window.scrollY * 20 / 100}px)`
-	}
+  function moveImages(first, second) {
+    first.style.transform = `translate(${(window.scrollY * 30) / 100}px)`
+    second.style.transform = `translate(-${(window.scrollY * 20) / 100}px)`
+  }
 
-	function fadeInNew(slide) {
-		scrollMore.classList.add('fade-away')
+  function fadeInNew(slide) {
+    scrollMore.classList.add('fade-away')
 
-		if (window.scrollY > 800) {
+    if (window.scrollY > 800) {
       document.querySelector('body').classList.add('hide-scroll')
-			const info = document.querySelector('.info')
-			const contact = document.querySelector('.contact')
-			const scooter = document.querySelector('.scooter')
-			const snap = document.querySelector('.snap')
-			slide.classList.remove('hide')
-			slide.classList.add('new-slide')
-			info.classList.add('info-repo')
-			contact.classList.add('contact-repo')
+      const info = document.querySelector('.info')
+      const contact = document.querySelector('.contact')
+      const scooter = document.querySelector('.scooter')
+      const snap = document.querySelector('.snap')
+      slide.classList.remove('hide')
+      slide.classList.add('new-slide')
+      info.classList.add('info-repo')
+      contact.classList.add('contact-repo')
 
-			if (scooter.classList.contains('animation')) {
-				setTimeout(function() {
-					scooter.classList.add('drive')
-					snapShot()
-				}, 800)
+      if (scooter.classList.contains('animation')) {
+        setTimeout(function() {
+          scooter.classList.add('drive')
+          snapShot()
+        }, 800)
 
-				function snapShot() {
-					setTimeout(function() {
-						snap.classList.remove('hide')
-						scooter.classList.remove('animation')
-						scooter.classList.remove('drive')
-					}, 2000)
-				}
-			}
-		}
-	}
+        function snapShot() {
+          setTimeout(function() {
+            snap.classList.remove('hide')
+            scooter.classList.remove('animation')
+            scooter.classList.remove('drive')
+          }, 2000)
+        }
+      }
+    }
+  }
 
-	function showCorrectControls(bool) {
-		if (bool) {
-			nextBtn.classList.add('hide')
-		} else {
-			prevBtn.classList.add('hide')
-		}
-	}
+  function showCorrectControls(bool) {
+    if (bool) {
+      nextBtn.classList.add('hide')
+    } else {
+      prevBtn.classList.add('hide')
+    }
+  }
 
-	function controls(items, direction) {
-		if (direction === 'next') {
-			i++
-		} else {
-			i--
-		}
+  function controls(items, direction) {
+    if (direction === 'next') {
+      i++
+    } else {
+      i--
+    }
 
-		if (i === items.length -1) {
-			nextBtn.classList.add('hide')
-		} else if (i === 0) {
-			prevBtn.classList.add('hide')
-		} else {
-			if (prevBtn.classList.contains('hide') || nextBtn.classList.contains('hide')) {
-				prevBtn.classList.remove('hide')
-				nextBtn.classList.remove('hide')
-			}
-		}
-	}
+    if (i === items.length - 1) {
+      nextBtn.classList.add('hide')
+    } else if (i === 0) {
+      prevBtn.classList.add('hide')
+    } else {
+      if (
+        prevBtn.classList.contains('hide') ||
+        nextBtn.classList.contains('hide')
+      ) {
+        prevBtn.classList.remove('hide')
+        nextBtn.classList.remove('hide')
+      }
+    }
+  }
 
-	function changeIconColors(items, icons) {
-		if (items[i].classList.contains('dark-icons')) {
-			icons.forEach(svg => svg.classList.remove('icon-fill'))
-		} else {
-			icons.forEach(svg => svg.classList.add('icon-fill'))
-		}
-	}
+  function changeIconColors(items, icons) {
+    if (items[i].classList.contains('dark-icons')) {
+      icons.forEach(svg => svg.classList.remove('icon-fill'))
+    } else {
+      icons.forEach(svg => svg.classList.add('icon-fill'))
+    }
+  }
 
-	function handleClick(items, direction, icons) {
-		controls(items, direction)
-		changeIconColors(items, icons)
+  function handleClick(items, direction, icons) {
+    controls(items, direction)
+    changeIconColors(items, icons)
 
-		items.forEach(item => {
-			item.classList.remove('active')
-			item.classList.add('hide')
-		})
+    items.forEach(item => {
+      item.classList.remove('active')
+      item.classList.add('hide')
+    })
 
-		items[i].classList.remove('hide')
-		items[i].classList.add('active')
+    items[i].classList.remove('hide')
+    items[i].classList.add('active')
+  }
 
-	}
-
-	return {
-		start: function(first, second, slideShow) {
-			optimizeAnimation(first, second)
-			fadeInNew(slideShow)
-		},
-		slideShow: function(items, direction, icons) {
-			handleClick(items ,direction, icons)
-		}
-	}
+  return {
+    start: function(first, second, slideShow) {
+      optimizeAnimation(first, second)
+      fadeInNew(slideShow)
+    },
+    slideShow: function(items, direction, icons) {
+      handleClick(items, direction, icons)
+    },
+  }
 })()
 
 document.addEventListener('scroll', () => para.start(saloon, cactus, slideShow))
+
 nextBtn.addEventListener('click', () => para.slideShow(slideItems, 'next', icons))
 prevBtn.addEventListener('click', () => para.slideShow(slideItems, 'prev', icons))
