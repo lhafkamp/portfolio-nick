@@ -1,11 +1,25 @@
-const prevBtn = document.querySelector('.prev')
-const nextBtn = document.querySelector('.next')
-const saloon = document.querySelector('.saloon')
-const cactus = document.querySelector('.cactus')
 const slideShow = document.querySelector('.slide')
 const slideItems = document.querySelectorAll('.slide .item')
 const icons = document.querySelectorAll('.info svg path')
-const scrollMore = document.querySelector('.scroll-more')
+
+const paraItems = {
+  saloon: document.querySelector('.saloon'),
+  cactus: document.querySelector('.cactus')
+}
+
+const ctrlButtons = {
+  prev: document.querySelector('.prev'),
+  next: document.querySelector('.next')
+}
+
+const firstSlideItems = {
+  info: document.querySelector('.info'),
+  contact: document.querySelector('.contact'),
+  scooter: document.querySelector('.scooter'),
+  snap: document.querySelector('.snap'),
+  body: document.querySelector('body'),
+  scrollMore: document.querySelector('.scroll-more')
+}
 
 const para = (function() {
   let i = 0
@@ -15,7 +29,7 @@ const para = (function() {
     window.scrollTo(0, 0)
   }
 
-  function optimizeAnimation(first, second) {
+  function optimizeAnimation(paraItems) {
     if (animationQueued) {
       return
     }
@@ -23,56 +37,40 @@ const para = (function() {
     animationQueued = true
 
     window.requestAnimationFrame(() => {
-      moveImages(first, second)
+      moveImages(paraItems)
       animationQueued = false
     })
   }
 
-  function moveImages(first, second) {
-    first.style.transform = `translate(${(window.scrollY * 30) / 100}px)`
-    second.style.transform = `translate(-${(window.scrollY * 20) / 100}px)`
+  function moveImages(paraItems) {
+    paraItems.saloon.style.transform = `translate(${(window.scrollY * 30) / 100}px)`
+    paraItems.cactus.style.transform = `translate(-${(window.scrollY * 20) / 100}px)`
   }
 
-  function fadeInNew(slide) {
-    scrollMore.classList.add('fade-away')
+  function fadeInNew(slide, items) {
+    items.scrollMore.classList.add('fade-away')
 
     if (window.scrollY > 800) {
-      document.querySelector('body').classList.add('hide-scroll')
-      const info = document.querySelector('.info')
-      const contact = document.querySelector('.contact')
-      const scooter = document.querySelector('.scooter')
-      const snap = document.querySelector('.snap')
+      items.body.classList.add('hide-scroll')
       slide.classList.remove('hide')
       slide.classList.add('new-slide')
-      info.classList.add('info-repo')
-      contact.classList.add('contact-repo')
+      items.info.classList.add('info-repo')
+      items.contact.classList.add('contact-repo')
 
-      if (scooter.classList.contains('animation')) {
+      if (items.scooter.classList.contains('animation')) {
         setTimeout(function() {
-          scooter.classList.add('drive')
-          snapShot()
-        }, 800)
-
-        function snapShot() {
+          items.scooter.classList.add('drive')
           setTimeout(function() {
-            snap.classList.remove('hide')
-            scooter.classList.remove('animation')
-            scooter.classList.remove('drive')
+            items.snap.classList.remove('hide')
+            items.scooter.classList.remove('animation')
+            items.scooter.classList.remove('drive')
           }, 2000)
-        }
+        }, 800)
       }
     }
   }
 
-  function showCorrectControls(bool) {
-    if (bool) {
-      nextBtn.classList.add('hide')
-    } else {
-      prevBtn.classList.add('hide')
-    }
-  }
-
-  function controls(items, direction) {
+  function controls(items, direction, btn) {
     if (direction === 'next') {
       i++
     } else {
@@ -80,16 +78,16 @@ const para = (function() {
     }
 
     if (i === items.length - 1) {
-      nextBtn.classList.add('hide')
+      btn.next.classList.add('hide')
     } else if (i === 0) {
-      prevBtn.classList.add('hide')
+      btn.prev.classList.add('hide')
     } else {
       if (
-        prevBtn.classList.contains('hide') ||
-        nextBtn.classList.contains('hide')
+        btn.prev.classList.contains('hide') ||
+        btn.next.classList.contains('hide')
       ) {
-        prevBtn.classList.remove('hide')
-        nextBtn.classList.remove('hide')
+        btn.prev.classList.remove('hide')
+        btn.next.classList.remove('hide')
       }
     }
   }
@@ -102,8 +100,8 @@ const para = (function() {
     }
   }
 
-  function handleClick(items, direction, icons) {
-    controls(items, direction)
+  function handleClick(items, direction, icons, ctrlButtons) {
+    controls(items, direction, ctrlButtons)
     changeIconColors(items, icons)
 
     items.forEach(item => {
@@ -116,17 +114,17 @@ const para = (function() {
   }
 
   return {
-    start: function(first, second, slideShow) {
-      optimizeAnimation(first, second)
-      fadeInNew(slideShow)
+    start: function(paraItems, slideShow, firstSlideItems) {
+      optimizeAnimation(paraItems)
+      fadeInNew(slideShow, firstSlideItems)
     },
-    slideShow: function(items, direction, icons) {
-      handleClick(items, direction, icons)
+    slideShow: function(items, direction, icons, ctrlButtons) {
+      handleClick(items, direction, icons, ctrlButtons)
     },
   }
 })()
 
-document.addEventListener('scroll', () => para.start(saloon, cactus, slideShow))
+document.addEventListener('scroll', () => para.start(paraItems, slideShow, firstSlideItems))
 
-nextBtn.addEventListener('click', () => para.slideShow(slideItems, 'next', icons))
-prevBtn.addEventListener('click', () => para.slideShow(slideItems, 'prev', icons))
+ctrlButtons.prev.addEventListener('click', () => para.slideShow(slideItems, 'prev', icons, ctrlButtons))
+ctrlButtons.next.addEventListener('click', () => para.slideShow(slideItems, 'next', icons, ctrlButtons))
