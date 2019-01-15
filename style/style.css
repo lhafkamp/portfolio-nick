@@ -8,7 +8,7 @@ body {
 }
 
 p {
-  font-family: "Avenir Next";
+  font-family: "Avenir Next", sans-serif;
   font-weight: 600;
   width: 300px;
   color: #383A40;
